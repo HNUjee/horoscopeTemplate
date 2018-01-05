@@ -1,0 +1,120 @@
+
+    body {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container {
+        width: 900px;
+        display: flex;
+        flex-basis: 400px;
+        flex-direction: column;
+        margin-top: 50px;
+        justify-content: center;
+    }
+
+    .container .avatar-title {
+        display: flex;
+        justify-content: center;
+    }
+
+    .container .content-panel {
+        display: flex;
+        flex-basis: 400px;
+    }
+
+    .container .left-panel {
+        display: flex;
+        border: 1px solid #ccc;
+        flex-basis: 300px;
+        flex-direction: column;
+    }
+
+    .container .left-panel .avatar {
+        display: flex;
+        border: 1px solid #ccc;
+        flex-basis: 250px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container .left-panel .select-control {
+        display: flex;
+        align-items: center;
+        flex-basis: 80px;
+    }
+
+    .container .right-panel {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 600px;
+        border: 1px solid #ccc;
+    }
+
+    .container .right-panel .fortunepanel {
+        display: flex;
+        flex-basis: 60px;
+        align-items: center;
+        background-color: #3272b0;
+        color: #fff;
+    }
+
+    .panel-forcontent {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 400px;
+    }
+
+    .panel-total {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .panel-total .panel-head,
+    .panel-head-love,
+    .panel-head-study {
+        flex-basis: 20px;
+        width: 65px;
+        text-align: center;
+        line-height: 25px;
+        margin: 15px 15px;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .panel-total .panel-head {
+        background-color: #59bad8;
+    }
+
+    .panel-total .panel-head-love {
+        background-color: #d14649;
+    }
+
+    .panel-total .panel-head-study {
+        background-color: #eaa54d;
+    }
+
+
+    .body-content-toal, .body-content-love,.body-content-study{
+        padding-left: 15px;
+        font-size: 12px;
+    }
+ .glyphicon {
+        font-size: 14px;
+    }
+
+    #totals,
+    #loves,
+    #studys,
+    label {
+        font-size: 6px;
+        float: left;
+    }
+
+    #ratstars {
+        float: right;
+    }
