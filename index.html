@@ -43,19 +43,19 @@
                     <div class="col-md-4" id="totals">
                         <label>整体运势</label>
                         <div class="ratstars">
-                            <input class="input" value="0" type="text" class="rating" />
+                            <input class="input" value="0" type="text" class="rating" data-min=0 data-max=5 data-step=1 data-size="xs" />
                         </div>
                     </div>
                     <div class="col-md-4" id="loves">
                         <label>爱情运势</label>
                         <div class="ratstars">
-                            <input class="input" value="0" type="text" class="rating" />
+                            <input class="input" value="0" type="text" class="rating" data-min=0 data-max=5 data-step=1 data-size="xs"/>
                         </div>
                     </div>
                     <div class="col-md-4" id="studys">
                         <label>学业运势</label>
                         <div class="ratstars">
-                            <input class="input" value="0" type="text" class="rating" />
+                            <input class="input" value="0" type="text" class="rating" data-min=0 data-max=5 data-step=1 data-size="xs"/>
                         </div>
                     </div>
                 </div>
@@ -89,6 +89,82 @@
     <script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="plugins/star-rating.min.js"></script>
     <script type="text/javascript">
+    $(function() {
+        //获取选择项
+        var $selected = $(".select-control").find("select");
+        //整体运势
+        var $totals = $(".fortunepanel").find("#totals");
+        //爱情运势
+        var $loves = $(".fortunepanel").find("#loves");
+        //学业运势
+        var $studys = $(".fortunepanel").find("#studys");
+        //初始化星星
+        var $inp = $(".input");
+        $inp.rating('refresh', {
+            stars: 5, //多少颗星星
+            min: 0, //最小值
+            max: 5, //最大值
+            step: 1, //步长
+            size: "xs", //星星大小
+            showClear: false, //是否显示清除按钮
+            showCaption: false, //是否显示值
+            hoverEnabled: false, //是否滑动星星
+        });
+        //当select 选项值改变时触发
+        $selected.on("change", function() {
+            //获取select 选项中的值
+            var starname = $("option:selected", this).val();
+            //调用星座方法
+            lovestar(starname);
+           
+        });
+        //自定义星座内容方法 starname 为星座名称
+        function lovestar(starname) {
+
+            //循环json数组
+            $.each(horoscopeObj, function(name, item) {
+                //外层循环星座名称
+                var $name = name;
+                //内层循环获取星座信息
+                for (var i = 0; i < item.length; i++) {
+                    //定义星座内容数组
+                    var items = item[i];
+                    if (starname === $name) {
+                        //整体运势内容
+                        var totalBrief = items.totalBrief;
+                        //爱情运势内容
+                        var loveBrief = items.loveBrief;
+                        //学业运势内容
+                        var studyBrief = items.studyBrief;
+                        //头像
+                        $("img").attr("src", "images/" + items.index + ".png");
+                        //整体运势星星
+                        $totals.find("input").rating("update", items.total);
+                        //爱情运势星星
+                        $loves.find("input").rating("update", items.love);
+                        //学业运势星星
+                        $studys.find("input").rating("update", items.study);
+                        //将内容加到div中
+                        $(".body-content-toal").text(totalBrief);
+                        $(".body-content-love").text(loveBrief);
+                        $(".body-content-study").text(studyBrief);
+                    } else if (starname === '-1') {
+                        $("img").attr("src", "images/-1.png");
+                        //整体运势星星
+                        $totals.find("input").rating("update", 0);
+                        //爱情运势星星
+                        $loves.find("input").rating("update", 0);
+                        //学业运势星星
+                        $studys.find("input").rating("update", 0);
+                        //清空内容
+                        $(".body-content-toal").empty();
+                        $(".body-content-love").empty();
+                        $(".body-content-study").empty();
+                    }
+                }
+            })
+        }
+    });
     // 初始化数据
     var horoscopeObj = {
         "Aries": [{
@@ -200,178 +276,6 @@
             "studyBrief": "工作进展有点不顺心，尝试换个角度想问题能化解消极情绪。"
         }]
     };
-    $(function() {
-        //
-        var $selected = $(".select-control").find("select");
-        var $totals = $(".fortunepanel").find("#totals");
-        var $loves = $(".fortunepanel").find("#loves");
-        var $studys = $(".fortunepanel").find("#studys");
-        var $inp = $(".input");
-        $inp.rating('refresh', {
-            stars: 5,
-            min: 0,
-            max: 5,
-            step: 1,
-            size: "xs",
-            showClear: false,
-            showCaption: false,
-            hoverEnabled: false,
-        });
-        $selected.on("change", function() {
-            //获取被选中option 中的值
-            var stars = $("option:selected", this).val();
-            if (stars === 'Aries') {
-                //整体运势内容
-                var totalBrief = horoscopeObj.Aries[0].totalBrief;
-                //爱情运势内容
-                var loveBrief = horoscopeObj.Aries[0].loveBrief;
-                //学业运势内容
-                var studyBrief = horoscopeObj.Aries[0].studyBrief;
-                //头像
-                $("img").attr("src", "images/" + horoscopeObj.Aries[0].index + ".png");
-                //整体运势星星
-                $totals.find("input").rating("update", horoscopeObj.Aries[0].total);
-                //爱情运势星星
-                $loves.find("input").rating("update", horoscopeObj.Aries[0].love);
-                //学业运势星星
-                $studys.find("input").rating("update", horoscopeObj.Aries[0].study);
-                //将内容加到div中
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Taurus') {
-                var atotalBrief = horoscopeObj.Taurus[0].totalBrief;
-                var aloveBrief = horoscopeObj.Taurus[0].loveBrief;
-                var astudyBrief = horoscopeObj.Taurus[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Taurus[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Taurus[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Taurus[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Taurus[0].study);
-                $(".body-content-toal").text(atotalBrief);
-                $(".body-content-love").text(aloveBrief);
-                $(".body-content-study").text(astudyBrief);
-            } else if (stars === 'Gemini') {
-                var totalBrief = horoscopeObj.Gemini[0].totalBrief;
-                var loveBrief = horoscopeObj.Gemini[0].loveBrief;
-                var studyBrief = horoscopeObj.Gemini[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Gemini[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Gemini[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Gemini[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Gemini[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Cancer') {
-                var totalBrief = horoscopeObj.Cancer[0].totalBrief;
-                var loveBrief = horoscopeObj.Cancer[0].loveBrief;
-                var studyBrief = horoscopeObj.Cancer[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Cancer[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Cancer[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Cancer[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Cancer[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Leo') {
-                var totalBrief = horoscopeObj.Leo[0].totalBrief;
-                var loveBrief = horoscopeObj.Leo[0].loveBrief;
-                var studyBrief = horoscopeObj.Leo[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Leo[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Leo[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Leo[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Leo[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Virgo') {
-                var totalBrief = horoscopeObj.Virgo[0].totalBrief;
-                var loveBrief = horoscopeObj.Virgo[0].loveBrief;
-                var studyBrief = horoscopeObj.Virgo[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Virgo[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Virgo[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Virgo[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Virgo[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Libra') {
-                var totalBrief = horoscopeObj.Libra[0].totalBrief;
-                var loveBrief = horoscopeObj.Libra[0].loveBrief;
-                var studyBrief = horoscopeObj.Libra[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Libra[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Libra[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Libra[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Libra[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Scorpio') {
-                var totalBrief = horoscopeObj.Scorpio[0].totalBrief;
-                var loveBrief = horoscopeObj.Scorpio[0].loveBrief;
-                var studyBrief = horoscopeObj.Scorpio[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Scorpio[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Scorpio[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Scorpio[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Scorpio[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Sagittarius') {
-                var totalBrief = horoscopeObj.Sagittarius[0].totalBrief;
-                var loveBrief = horoscopeObj.Sagittarius[0].loveBrief;
-                var studyBrief = horoscopeObj.Sagittarius[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Sagittarius[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Sagittarius[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Sagittarius[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Sagittarius[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Capricornus') {
-                var totalBrief = horoscopeObj.Capricornus[0].totalBrief;
-                var loveBrief = horoscopeObj.Capricornus[0].loveBrief;
-                var studyBrief = horoscopeObj.Capricornus[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Capricornus[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Capricornus[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Capricornus[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Capricornus[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Aquarius') {
-                var totalBrief = horoscopeObj.Aquarius[0].totalBrief;
-                var loveBrief = horoscopeObj.Aquarius[0].loveBrief;
-                var studyBrief = horoscopeObj.Aquarius[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Aquarius[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Aquarius[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Aquarius[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Aquarius[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else if (stars === 'Pisces') {
-                var totalBrief = horoscopeObj.Pisces[0].totalBrief;
-                var loveBrief = horoscopeObj.Pisces[0].loveBrief;
-                var studyBrief = horoscopeObj.Pisces[0].studyBrief;
-                $("img").attr("src", "images/" + horoscopeObj.Pisces[0].index + ".png");
-                $totals.find("input").rating("update", horoscopeObj.Pisces[0].total);
-                $loves.find("input").rating("update", horoscopeObj.Pisces[0].love);
-                $studys.find("input").rating("update", horoscopeObj.Pisces[0].study);
-                $(".body-content-toal").text(totalBrief);
-                $(".body-content-love").text(loveBrief);
-                $(".body-content-study").text(studyBrief);
-            } else {
-                $("img").attr("src", "images/-1.png");
-                $totals.find("input").rating("update", 0);
-                $loves.find("input").rating("update", 0);
-                $studys.find("input").rating("update", 0);
-                $(".body-content-toal").text("");
-                $(".body-content-love").text("");
-                $(".body-content-study").text("");
-            }
-        })
-
-    })
     </script>
 </body>
 
